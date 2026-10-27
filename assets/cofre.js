@@ -1,4 +1,4 @@
-/* Tela de senha da Governança CTO · Visão do Time (a mesma senha e o mesmo cofre da Governança CTO; a memória do aparelho é própria deste site). Os dados chegam criptografados (data/data.enc.js, AES-256-GCM);
+/* Tela de senha da Governança CTO · Visão do Time (a mesma senha e o mesmo cofre da Governança CTO; a memória do aparelho é própria deste site). Os dados chegam criptografados (data/foto.enc.js e, quando alguém filtra, data/base.enc.js, AES-256-GCM);
    a senha deriva a chave no próprio navegador (PBKDF2-SHA256) e nada sai do aparelho.
    "Lembrar neste aparelho" guarda só a chave derivada, nunca a senha. */
 (() => {
@@ -11,6 +11,7 @@ async function abrir(chave) {
   const pt = await crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(C.iv)}, chave, b64(C.ct));
   const txt = await new Response(new Blob([pt]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
   window.FOTO = JSON.parse(txt);
+  window.FOTO_CHAVE = chave;   // a mesma chave abre a base completa (data/base.enc.js) quando alguém usa um filtro
 }
 async function derivar(senha) {
   const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(senha), 'PBKDF2', false, ['deriveKey']);
