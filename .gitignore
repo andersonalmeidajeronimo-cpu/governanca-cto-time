@@ -1,0 +1,7 @@
+data/foto.js
+data/data.js
+*.py
+*.sh
+motor/
+senha_sal.txt
+__pycache__/
